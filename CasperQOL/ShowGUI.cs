@@ -7,9 +7,10 @@ public static class ShowGUI
 
     private static GUIStyle guiStyleBox;
     private static GUIStyle guiStyleButton;
-    private static Texture2D darkBackground;
-    private static Texture2D lightBackground;
+    private static GUIStyle guiStyleButtonSelected;
+
     private static Texture2D lightestBackground;
+    private static Texture2D lightBackground;
 
     static ShowGUI()
     {
@@ -19,25 +20,29 @@ public static class ShowGUI
     private static void InitializeStyles()
     {
         // Create textures
-        darkBackground = CreateColorTexture("#161626");
-        lightBackground = CreateColorTexture("#303040");
-        lightestBackground = CreateColorTexture("#3A3A58");
+        lightestBackground = CreateColorTexture("#3A3A58"); // Lightest Background
+        lightBackground = CreateColorTexture("#303040");   // Light Background
 
         // Box style
         guiStyleBox = new GUIStyle(GUI.skin.box);
-        guiStyleBox.normal.background = darkBackground;
-        guiStyleBox.normal.textColor = HexToColor("#5B4136");  // OrangeMid
+        guiStyleBox.normal.background = lightestBackground;
+        guiStyleBox.normal.textColor = HexToColor("#947022");  // OrangeBrightest
         guiStyleBox.fontSize = 16;
         guiStyleBox.alignment = TextAnchor.UpperCenter;
 
-        // Button style
+        // Button style for normal state
         guiStyleButton = new GUIStyle(GUI.skin.button);
-        guiStyleButton.normal.textColor = HexToColor("#5B4136");  // OrangeMid
+        guiStyleButton.normal.textColor = HexToColor("#947022");  // OrangeBrightest
         guiStyleButton.normal.background = lightBackground;
-        guiStyleButton.hover.textColor = HexToColor("#795933");  // OrangeBright
+        guiStyleButton.hover.textColor = HexToColor("#795933");    // OrangeBright
         guiStyleButton.hover.background = lightBackground;
         guiStyleButton.fontSize = 14;
         guiStyleButton.alignment = TextAnchor.MiddleCenter;
+
+        // Button style for selected state
+        guiStyleButtonSelected = new GUIStyle(guiStyleButton);
+        guiStyleButtonSelected.normal.textColor = HexToColor("#947022");  // OrangeBrightest
+        guiStyleButtonSelected.normal.background = lightestBackground;
     }
 
     public static void DrawGUI()
@@ -50,9 +55,9 @@ public static class ShowGUI
         GUI.Box(new Rect(xPos, yPos, 200, 150), "Casper's QOL Menu", guiStyleBox);
 
         // Update the toggles using SharedState
-        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", guiStyleButton);
-        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", guiStyleButton);
-        SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", guiStyleButton);
+        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
+        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
+        SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
     }
 
     private static Color HexToColor(string hex)
