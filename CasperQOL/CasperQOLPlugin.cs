@@ -4,6 +4,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using CasperQOL.Patches;
 using EquinoxsModUtils;
+using UnityEngine;
 
 namespace CasperQOL
 {
@@ -14,6 +15,14 @@ namespace CasperQOL
         public static float CustomMaxWalkSpeed { get; set; } = 11f;
         public static float DefaultMaxRunSpeed { get; set; } = 8f;
         public static float DefaultMaxWalkSpeed { get; set; } = 5f;
+
+        // V2 menu things :
+
+        public static bool speedToggle = false;
+        public static bool lightToggle = false;
+        public static bool protectToggle = false;
+
+        // end of v2
 
         public static readonly HashSet<string> ValidResourceNames = new HashSet<string>
         {
@@ -45,6 +54,19 @@ namespace CasperQOL
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loaded.");
             Log = Logger;
 
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                ShowGUI.shouldShow = !ShowGUI.shouldShow; // Toggle visibility
+            }
+        }
+
+        void OnGUI()
+        {
+            ShowGUI.DrawGUI();
         }
 
 
