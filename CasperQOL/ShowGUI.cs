@@ -11,6 +11,7 @@ public static class ShowGUI
 
     private static Texture2D lightestBackground;
     private static Texture2D lightBackground;
+    private static Texture2D purpleBackground; // For selected button state
 
     static ShowGUI()
     {
@@ -20,29 +21,30 @@ public static class ShowGUI
     private static void InitializeStyles()
     {
         // Create textures
-        lightestBackground = CreateColorTexture("#3A3A58"); // Lightest Background
-        lightBackground = CreateColorTexture("#303040");   // Light Background
+        lightestBackground = CreateColorTexture("#3A3A58");
+        lightBackground = CreateColorTexture("#303040");
+        purpleBackground = CreateColorTexture("#800080");
 
         // Box style
         guiStyleBox = new GUIStyle(GUI.skin.box);
         guiStyleBox.normal.background = lightestBackground;
-        guiStyleBox.normal.textColor = HexToColor("#947022");  // OrangeBrightest
+        guiStyleBox.normal.textColor = HexToColor("#FFA500");
         guiStyleBox.fontSize = 16;
         guiStyleBox.alignment = TextAnchor.UpperCenter;
 
         // Button style for normal state
         guiStyleButton = new GUIStyle(GUI.skin.button);
-        guiStyleButton.normal.textColor = HexToColor("#947022");  // OrangeBrightest
+        guiStyleButton.normal.textColor = HexToColor("#FFA500");
         guiStyleButton.normal.background = lightBackground;
-        guiStyleButton.hover.textColor = HexToColor("#795933");    // OrangeBright
+        guiStyleButton.hover.textColor = HexToColor("#E59400");
         guiStyleButton.hover.background = lightBackground;
         guiStyleButton.fontSize = 14;
         guiStyleButton.alignment = TextAnchor.MiddleCenter;
 
         // Button style for selected state
         guiStyleButtonSelected = new GUIStyle(guiStyleButton);
-        guiStyleButtonSelected.normal.textColor = HexToColor("#947022");  // OrangeBrightest
-        guiStyleButtonSelected.normal.background = lightestBackground;
+        guiStyleButtonSelected.normal.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.normal.background = purpleBackground; 
     }
 
     public static void DrawGUI()
