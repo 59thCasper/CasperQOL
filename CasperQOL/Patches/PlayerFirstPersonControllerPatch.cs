@@ -25,7 +25,6 @@ namespace CasperQOL.Patches
             {
                 controller.maxRunSpeed = runSpeed;
                 controller.maxWalkSpeed = walkSpeed;
-                //Debug.Log($"Updated walk speed to {walkSpeed}");
             }
         }
     }
