@@ -77,7 +77,7 @@ namespace CasperQOL.Patches
                 }
                 else
                 {
-                    Debug.Log("No ground detected directly below via SphereCast.");
+                    //Debug.Log("No ground detected directly below via SphereCast.");
                     SharedState.stoodOn = "";
                 }
 
