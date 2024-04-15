@@ -11,7 +11,7 @@ namespace CasperQOL.Patches
         {
             static void Prefix(PlayerFirstPersonController __instance)
             {
-                if (__instance.m_IsGrounded && SharedState.ValidResourceNames.Contains(SharedState.stoodOn))
+                if (__instance.m_IsGrounded && SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
                 {
                     UpdateSpeed(__instance, SharedState.CustomMaxRunSpeed, SharedState.CustomMaxWalkSpeed);
                 }

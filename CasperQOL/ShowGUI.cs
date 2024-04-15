@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class ShowGUI
 {
-    public static bool shouldShow = false; // Control visibility of the GUI
+    public static bool shouldShow = false;
 
     private static GUIStyle guiStyleBox;
     private static GUIStyle guiStyleButton;
@@ -11,7 +11,7 @@ public static class ShowGUI
 
     private static Texture2D lightestBackground;
     private static Texture2D lightBackground;
-    private static Texture2D purpleBackground; // For selected button state
+    private static Texture2D purpleBackground;
 
     static ShowGUI()
     {
@@ -21,30 +21,48 @@ public static class ShowGUI
     private static void InitializeStyles()
     {
         // Create textures
-        lightestBackground = CreateColorTexture("#3A3A58");
-        lightBackground = CreateColorTexture("#303040");
-        purpleBackground = CreateColorTexture("#800080");
+        lightestBackground = CreateColorTexture("#3A3A58"); 
+        lightBackground = CreateColorTexture("#303040");  
+        purpleBackground = CreateColorTexture("#800080"); 
 
         // Box style
         guiStyleBox = new GUIStyle(GUI.skin.box);
         guiStyleBox.normal.background = lightestBackground;
-        guiStyleBox.normal.textColor = HexToColor("#FFA500");
+        guiStyleBox.normal.textColor = HexToColor("#FFA500"); 
         guiStyleBox.fontSize = 16;
         guiStyleBox.alignment = TextAnchor.UpperCenter;
 
         // Button style for normal state
         guiStyleButton = new GUIStyle(GUI.skin.button);
-        guiStyleButton.normal.textColor = HexToColor("#FFA500");
         guiStyleButton.normal.background = lightBackground;
-        guiStyleButton.hover.textColor = HexToColor("#E59400");
+        guiStyleButton.normal.textColor = HexToColor("#FFA500"); 
         guiStyleButton.hover.background = lightBackground;
+        guiStyleButton.hover.textColor = HexToColor("#E59400");   
+        guiStyleButton.active.background = lightBackground;
+        guiStyleButton.active.textColor = HexToColor("#E59400");
+        guiStyleButton.focused.background = lightBackground;
+        guiStyleButton.focused.textColor = HexToColor("#FFA500");
         guiStyleButton.fontSize = 14;
         guiStyleButton.alignment = TextAnchor.MiddleCenter;
 
         // Button style for selected state
         guiStyleButtonSelected = new GUIStyle(guiStyleButton);
+        guiStyleButtonSelected.normal.background = purpleBackground;
         guiStyleButtonSelected.normal.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.normal.background = purpleBackground; 
+        guiStyleButtonSelected.hover.background = purpleBackground;
+        guiStyleButtonSelected.hover.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.active.background = purpleBackground;
+        guiStyleButtonSelected.active.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.focused.background = purpleBackground;
+        guiStyleButtonSelected.focused.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.onNormal.background = purpleBackground;
+        guiStyleButtonSelected.onNormal.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.onHover.background = purpleBackground;
+        guiStyleButtonSelected.onHover.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.onActive.background = purpleBackground;
+        guiStyleButtonSelected.onActive.textColor = HexToColor("#FFA500");
+        guiStyleButtonSelected.onFocused.background = purpleBackground;
+        guiStyleButtonSelected.onFocused.textColor = HexToColor("#FFA500");
     }
 
     public static void DrawGUI()
@@ -57,9 +75,28 @@ public static class ShowGUI
         GUI.Box(new Rect(xPos, yPos, 200, 150), "Casper's QOL Menu", guiStyleBox);
 
         // Update the toggles using SharedState
+        /*
         SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
         SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
         SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
+        */
+        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
+        if (GUI.changed)
+        {
+            Debug.Log("Speed Toggle changed: " + SharedState.speedToggle);
+        }
+
+        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
+        if (GUI.changed)
+        {
+            Debug.Log("Light Toggle changed: " + SharedState.lightToggle);
+        }
+
+        SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
+        if (GUI.changed)
+        {
+            Debug.Log("Protection Toggle changed: " + SharedState.protectToggle);
+        }
     }
 
     private static Color HexToColor(string hex)
