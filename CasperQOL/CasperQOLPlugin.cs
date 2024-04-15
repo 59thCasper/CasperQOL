@@ -11,8 +11,8 @@ namespace CasperQOL
     public static class SharedState
     {
         public static string stoodOn = "";
-        public static float CustomMaxRunSpeed { get; set; } = 14f;  // New max run speed when condition is met
-        public static float CustomMaxWalkSpeed { get; set; } = 11f;
+        public static float CustomMaxRunSpeed { get; set; } = 11f;
+        public static float CustomMaxWalkSpeed { get; set; } = 8f;
         public static float DefaultMaxRunSpeed { get; set; } = 8f;
         public static float DefaultMaxWalkSpeed { get; set; } = 5f;
 
@@ -60,7 +60,7 @@ namespace CasperQOL
         {
             if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                ShowGUI.shouldShow = !ShowGUI.shouldShow; // Toggle visibility
+                ShowGUI.shouldShow = !ShowGUI.shouldShow;
             }
         }
 
@@ -74,7 +74,6 @@ namespace CasperQOL
         private void ApplyPatches()
         {
             Harmony.CreateAndPatchAll(typeof(PlayerFirstPersonControllerPatch));
-            Harmony.CreateAndPatchAll(typeof(PlayerInspectorLateUpdatePatch));
         }
     }
 }
