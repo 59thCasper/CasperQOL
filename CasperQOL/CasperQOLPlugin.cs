@@ -74,6 +74,7 @@ namespace CasperQOL
         private void ApplyPatches()
         {
             Harmony.CreateAndPatchAll(typeof(PlayerFirstPersonControllerPatch));
+            Harmony.CreateAndPatchAll(typeof(HeadlampUpdatePatch));
         }
     }
 }

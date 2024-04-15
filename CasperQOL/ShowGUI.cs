@@ -85,13 +85,13 @@ public static class ShowGUI
         {
             Debug.Log("Speed Toggle changed: " + SharedState.speedToggle);
         }
-/*
+
         SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
             Debug.Log("Light Toggle changed: " + SharedState.lightToggle);
         }
-
+/*
         SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {

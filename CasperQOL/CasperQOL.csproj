@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CasperQOLPlugin.cs" />
+    <Compile Include="Patches\HeadlampUpdatePatch.cs" />
     <Compile Include="Patches\PlayerFirstPersonControllerPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShowGUI.cs" />
