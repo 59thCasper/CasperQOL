@@ -43,6 +43,9 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Techtonica\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="BepInEx.Harmony">
+      <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Techtonica\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="EquinoxsModUtils">
       <HintPath>..\..\..\EquinoxsModUtils\EquinoxsModUtils.dll</HintPath>
     </Reference>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using CasperQOL.Patches;
 using EquinoxsModUtils;
 using UnityEngine;
+using BepInEx.Configuration;
 
 namespace CasperQOL
 {
@@ -23,6 +24,7 @@ namespace CasperQOL
         public static bool lightToggle = false;
         public static bool protectToggle = false;
         public static bool oreProtect = false;
+        public static  ConfigEntry<KeyboardShortcut> toggleKey;
 
         // end of v2
 
@@ -40,7 +42,7 @@ namespace CasperQOL
     {
         private const string MyGUID = "com.casper.CasperQOL";
         private const string PluginName = "CasperQOL";
-        private const string VersionString = "1.0.0";
+        private const string VersionString = "1.0.4";
 
         private static readonly Harmony Harmony = new Harmony(MyGUID);
         public static ManualLogSource Log = new ManualLogSource(PluginName);
@@ -49,6 +51,7 @@ namespace CasperQOL
         {
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
             Harmony.PatchAll();
+            CreateConfigEntries();
             ApplyPatches();
 
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loaded.");
@@ -58,7 +61,7 @@ namespace CasperQOL
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            if (SharedState.toggleKey.Value.IsDown())
             {
                 ShowGUI.shouldShow = !ShowGUI.shouldShow;
             }
@@ -76,5 +79,11 @@ namespace CasperQOL
             Harmony.CreateAndPatchAll(typeof(HeadlampUpdatePatch));
             Harmony.CreateAndPatchAll(typeof(VoxelModificationPatch));
         }
+        private void CreateConfigEntries()
+        {
+            var defaultKey = new KeyboardShortcut(KeyCode.KeypadMinus);  // Default key
+            SharedState.toggleKey = Config.Bind("Controls", "GUI Key", defaultKey, "Key to toggle the GUI.");
+        }
+
     }
 }
