@@ -7,15 +7,14 @@ namespace CasperQOL.Patches
     [HarmonyPatch("Update")]
     public class HeadlampUpdatePatch
     {
-        static bool previousToggleState = SharedState.lightToggle;  // Track the previous state to detect changes
+        static bool previousToggleState = SharedState.lightToggle;
 
         static void Prefix(Headlamp __instance)
         {
             if (SharedState.lightToggle != previousToggleState)
             {
-                __instance.ToggleLight();  // Toggle the light when the state changes
-                previousToggleState = SharedState.lightToggle;  // Update the previous state
-                //Debug.Log("Light Toggle changed via GUI: " + SharedState.lightToggle);
+                __instance.ToggleLight();
+                previousToggleState = SharedState.lightToggle;
             }
         }
     }

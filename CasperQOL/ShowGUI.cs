@@ -74,12 +74,6 @@ public static class ShowGUI
 
         GUI.Box(new Rect(xPos, yPos, 200, 150), "Casper's QOL Menu", guiStyleBox);
 
-        // Update the toggles using SharedState
-        /*
-        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
-        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
-        SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
-        */
         SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {

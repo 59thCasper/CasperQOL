@@ -30,40 +30,30 @@ namespace CasperQOL.Patches
                 AccessTools.FieldRefAccess<PlayerFirstPersonController, int>(controller, "standingOnLayer") = layer;
             }
 
-            // Direct calculation of legHeight based on bodyCollider and transform
             private static float CalculateLegHeight(PlayerFirstPersonController controller)
             {
                 CapsuleCollider collider = GetBodyCollider(controller);
-                return collider.center.y * controller.transform.lossyScale.y;
+                return collider.bounds.extents.y;
             }
 
             static void Prefix(PlayerFirstPersonController __instance)
             {
-                bool wasGrounded = __instance.m_IsGrounded;
                 CapsuleCollider bodyCollider = GetBodyCollider(__instance);
                 LayerMask groundLayer = GetGroundLayer(__instance);
                 float legHeight = CalculateLegHeight(__instance);
                 Vector3 position = __instance.transform.position;
-                float groundSnapping = 0.2f;  // Adjusted for less sensitivity
+                float groundSnapping = 0.5f;
 
-                // Perform SphereCast to detect ground
+                Vector3 rayOrigin = position + Vector3.up * (legHeight + 0.1f);
+                float castDistance = legHeight + groundSnapping;
+
+                //Debug.Log("Casting SphereCast from: " + rayOrigin + " downwards for a distance of: " + castDistance);
+
                 RaycastHit hit;
-                Vector3 rayOrigin = position + Vector3.up * legHeight;
-                if (Physics.SphereCast(rayOrigin, bodyCollider.radius, Vector3.down, out hit, legHeight + groundSnapping, groundLayer, QueryTriggerInteraction.Ignore))
+                if (Physics.SphereCast(rayOrigin, bodyCollider.radius, Vector3.down, out hit, castDistance, groundLayer, QueryTriggerInteraction.Ignore))
                 {
                     SetStandingOnLayer(__instance, hit.collider.gameObject.layer);
-                    Vector3 groundContactPoint = hit.point;
-                    float adjustHeight = legHeight - hit.distance;
-
-                    __instance.m_IsGrounded = true; // Update grounded state
-
-                    if (!wasGrounded && __instance.m_Rigidbody.velocity.y < -0.1f) // More specific velocity threshold
-                    {
-                        if (Mathf.Abs(adjustHeight) > 0.05f) // Only adjust if the change is significant
-                        {
-                            __instance.m_Rigidbody.transform.position += Vector3.up * adjustHeight;
-                        }
-                    }
+                    //Debug.Log("Hit: " + hit.collider.name + " at Layer: " + hit.collider.gameObject.layer);
 
                     if (hit.collider.gameObject.CompareTag("IInteractable"))
                     {
@@ -73,17 +63,14 @@ namespace CasperQOL.Patches
                             var resId = interactableComponent.myMachineRef.ResId;
                             var displayName = SaveState.GetResInfoFromId(resId).displayName;
                             SharedState.stoodOn = displayName;
+                            //Debug.Log("Standing on Interactable: " + displayName);
                         }
-                    }
-                    else
-                    {
-                        SharedState.stoodOn = "";
                     }
                 }
                 else
                 {
-                    __instance.m_IsGrounded = false; // No ground detected
                     SharedState.stoodOn = "";
+                    //Debug.Log("No ground detected.");
                 }
 
                 if (__instance.m_IsGrounded && SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
@@ -100,6 +87,7 @@ namespace CasperQOL.Patches
             {
                 controller.maxRunSpeed = runSpeed;
                 controller.maxWalkSpeed = walkSpeed;
+                //Debug.Log("Updated Speeds to Run: " + runSpeed + ", Walk: " + walkSpeed);
             }
         }
     }

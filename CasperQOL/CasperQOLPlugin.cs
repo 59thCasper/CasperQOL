@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using CasperQOL.Patches;
 using EquinoxsModUtils;
 using UnityEngine;
-using YourNamespace;
 
 namespace CasperQOL
 {
