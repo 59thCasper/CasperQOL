@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using CasperQOL.Patches;
 using EquinoxsModUtils;
 using UnityEngine;
+using YourNamespace;
 
 namespace CasperQOL
 {
@@ -21,6 +22,7 @@ namespace CasperQOL
         public static bool speedToggle = false;
         public static bool lightToggle = false;
         public static bool protectToggle = false;
+        public static bool oreProtect = false;
 
         // end of v2
 
@@ -75,6 +77,7 @@ namespace CasperQOL
         {
             Harmony.CreateAndPatchAll(typeof(PlayerFirstPersonControllerPatch));
             Harmony.CreateAndPatchAll(typeof(HeadlampUpdatePatch));
+            Harmony.CreateAndPatchAll(typeof(VoxelModificationPatch));
         }
     }
 }

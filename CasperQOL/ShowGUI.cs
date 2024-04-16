@@ -91,13 +91,13 @@ public static class ShowGUI
         {
             Debug.Log("Light Toggle changed: " + SharedState.lightToggle);
         }
-/*
-        SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
+
+        SharedState.oreProtect = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.oreProtect, "Protect Ore", SharedState.oreProtect ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
-            Debug.Log("Protection Toggle changed: " + SharedState.protectToggle);
+            Debug.Log("Protection Toggle changed: " + SharedState.oreProtect);
         }
-*/
+
     }
 
     private static Color HexToColor(string hex)
