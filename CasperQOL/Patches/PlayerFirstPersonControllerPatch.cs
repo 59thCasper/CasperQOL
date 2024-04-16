@@ -33,7 +33,7 @@ namespace CasperQOL.Patches
             private static float CalculateLegHeight(PlayerFirstPersonController controller)
             {
                 CapsuleCollider collider = GetBodyCollider(controller);
-                return collider.bounds.extents.y;
+                return collider.center.y * controller.transform.lossyScale.y;
             }
 
             static void Prefix(PlayerFirstPersonController __instance)
@@ -42,19 +42,17 @@ namespace CasperQOL.Patches
                 LayerMask groundLayer = GetGroundLayer(__instance);
                 float legHeight = CalculateLegHeight(__instance);
                 Vector3 position = __instance.transform.position;
-                float groundSnapping = 0.5f;
+                float groundSnapping = 0.3f;  // Slightly increased sensitivity
 
-                Vector3 rayOrigin = position + Vector3.up * (legHeight + 0.1f);
-                float castDistance = legHeight + groundSnapping;
+                // Calculate ray origin and casting distance
+                Vector3 rayOrigin = position + Vector3.up * (legHeight + 0.1f);  // Slightly above the feet
+                float castDistance = legHeight + groundSnapping;  // Casting distance includes ground snapping
 
-                //Debug.Log("Casting SphereCast from: " + rayOrigin + " downwards for a distance of: " + castDistance);
-
+                // Perform SphereCast to detect ground
                 RaycastHit hit;
                 if (Physics.SphereCast(rayOrigin, bodyCollider.radius, Vector3.down, out hit, castDistance, groundLayer, QueryTriggerInteraction.Ignore))
                 {
                     SetStandingOnLayer(__instance, hit.collider.gameObject.layer);
-                    //Debug.Log("Hit: " + hit.collider.name + " at Layer: " + hit.collider.gameObject.layer);
-
                     if (hit.collider.gameObject.CompareTag("IInteractable"))
                     {
                         var interactableComponent = hit.collider.GetComponent<IInteractable>();
@@ -63,19 +61,31 @@ namespace CasperQOL.Patches
                             var resId = interactableComponent.myMachineRef.ResId;
                             var displayName = SaveState.GetResInfoFromId(resId).displayName;
                             SharedState.stoodOn = displayName;
-                            //Debug.Log("Standing on Interactable: " + displayName);
+                            Debug.Log($"Standing on interactable: {SharedState.stoodOn}");
                         }
+                    }
+                    else
+                    {
+                        SharedState.stoodOn = "";
                     }
                 }
                 else
                 {
                     SharedState.stoodOn = "";
-                    //Debug.Log("No ground detected.");
+                    Debug.Log("Not standing on any interactable object.");
                 }
 
-                if (__instance.m_IsGrounded && SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
+                // Update speed based on whether the player is grounded, on a valid resource, and the speed toggle is active
+                if (__instance.m_IsGrounded)
                 {
-                    UpdateSpeed(__instance, SharedState.CustomMaxRunSpeed, SharedState.CustomMaxWalkSpeed);
+                    if (SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
+                    {
+                        UpdateSpeed(__instance, SharedState.CustomMaxRunSpeed, SharedState.CustomMaxWalkSpeed);
+                    }
+                    else
+                    {
+                        UpdateSpeed(__instance, SharedState.DefaultMaxRunSpeed, SharedState.DefaultMaxWalkSpeed);
+                    }
                 }
                 else
                 {
@@ -85,10 +95,15 @@ namespace CasperQOL.Patches
 
             private static void UpdateSpeed(PlayerFirstPersonController controller, float runSpeed, float walkSpeed)
             {
-                controller.maxRunSpeed = runSpeed;
-                controller.maxWalkSpeed = walkSpeed;
-                //Debug.Log("Updated Speeds to Run: " + runSpeed + ", Walk: " + walkSpeed);
+                // Only update if there's a change to prevent unnecessary assignments
+                if (controller.maxRunSpeed != runSpeed || controller.maxWalkSpeed != walkSpeed)
+                {
+                    controller.maxRunSpeed = runSpeed;
+                    controller.maxWalkSpeed = walkSpeed;
+                    Debug.Log($"Updated Speeds -> Walk: {walkSpeed}, Run: {runSpeed}");
+                }
             }
+
         }
     }
 }

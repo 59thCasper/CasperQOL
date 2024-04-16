@@ -15,6 +15,7 @@ namespace CasperQOL
         public static float CustomMaxWalkSpeed { get; set; } = 8f;
         public static float DefaultMaxRunSpeed { get; set; } = 8f;
         public static float DefaultMaxWalkSpeed { get; set; } = 5f;
+        public static string lastZone = "";
 
         // V2 menu things :
 
