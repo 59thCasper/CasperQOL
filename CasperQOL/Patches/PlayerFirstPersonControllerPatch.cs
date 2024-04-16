@@ -39,13 +39,12 @@ namespace CasperQOL.Patches
 
             static void Prefix(PlayerFirstPersonController __instance)
             {
-                if (!__instance.m_IsGrounded) return;
-
+                bool wasGrounded = __instance.m_IsGrounded;
                 CapsuleCollider bodyCollider = GetBodyCollider(__instance);
                 LayerMask groundLayer = GetGroundLayer(__instance);
-                float legHeight = CalculateLegHeight(__instance); 
+                float legHeight = CalculateLegHeight(__instance);
                 Vector3 position = __instance.transform.position;
-                float groundSnapping = 0.1f; 
+                float groundSnapping = 0.2f;  // Adjusted for less sensitivity
 
                 // Perform SphereCast to detect ground
                 RaycastHit hit;
@@ -55,9 +54,15 @@ namespace CasperQOL.Patches
                     SetStandingOnLayer(__instance, hit.collider.gameObject.layer);
                     Vector3 groundContactPoint = hit.point;
                     float adjustHeight = legHeight - hit.distance;
-                    if (__instance.m_Rigidbody.velocity.y <= 0)
+
+                    __instance.m_IsGrounded = true; // Update grounded state
+
+                    if (!wasGrounded && __instance.m_Rigidbody.velocity.y < -0.1f) // More specific velocity threshold
                     {
-                        __instance.m_Rigidbody.transform.position += Vector3.up * adjustHeight;
+                        if (Mathf.Abs(adjustHeight) > 0.05f) // Only adjust if the change is significant
+                        {
+                            __instance.m_Rigidbody.transform.position += Vector3.up * adjustHeight;
+                        }
                     }
 
                     if (hit.collider.gameObject.CompareTag("IInteractable"))
@@ -77,10 +82,9 @@ namespace CasperQOL.Patches
                 }
                 else
                 {
-                    //Debug.Log("No ground detected directly below via SphereCast.");
+                    __instance.m_IsGrounded = false; // No ground detected
                     SharedState.stoodOn = "";
                 }
-
 
                 if (__instance.m_IsGrounded && SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
                 {
@@ -100,12 +104,3 @@ namespace CasperQOL.Patches
         }
     }
 }
-
-
-
-
-
-
-
-
-
