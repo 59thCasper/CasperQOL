@@ -111,7 +111,7 @@ public static class ShowGUI
         {
             Debug.Log("Speed Toggle changed: " + SharedState.speedToggle);
         }
-/*
+
         SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
@@ -123,7 +123,7 @@ public static class ShowGUI
         {
             Debug.Log("Protection Toggle changed: " + SharedState.protectToggle);
         }
-*/
+
     }
 
     private static Color HexToColor(string hex)
