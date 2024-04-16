@@ -1,4 +1,6 @@
 ﻿using CasperQOL;
+using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 public static class ShowGUI
@@ -13,6 +15,10 @@ public static class ShowGUI
     private static Texture2D lightBackground;
     private static Texture2D purpleBackground;
 
+    // test
+
+    private static Texture2D guiBoxNormal;
+
     static ShowGUI()
     {
         InitializeStyles();
@@ -25,12 +31,27 @@ public static class ShowGUI
         lightBackground = CreateColorTexture("#303040");  
         purpleBackground = CreateColorTexture("#800080"); 
 
+        /*
+        guiStyleBorder = new GUIStyle(GUI.skin.box);
+        guiStyleBorder.normal.background = orangeBorder;
+        guiStyleBorder.border = new RectOffset(3, 3, 3, 3);
+
         // Box style
         guiStyleBox = new GUIStyle(GUI.skin.box);
         guiStyleBox.normal.background = lightestBackground;
         guiStyleBox.normal.textColor = HexToColor("#FFA500"); 
         guiStyleBox.fontSize = 16;
         guiStyleBox.alignment = TextAnchor.UpperCenter;
+        */
+
+
+        // test
+        guiStyleBox = new GUIStyle();
+        guiStyleBox.fontSize = 16;
+        guiStyleBox.normal.textColor = Color.white;
+        guiStyleBox.alignment = TextAnchor.UpperCenter;
+        guiStyleBox.normal.background = guiBoxNormal;
+
 
         // Button style for normal state
         guiStyleButton = new GUIStyle(GUI.skin.button);
@@ -70,17 +91,22 @@ public static class ShowGUI
         if (!shouldShow) return;
 
         float xPos = Screen.width / 2 - 100;
-        float yPos = Screen.height / 2 - 75;
+        float yPos = Screen.height / 2 - 90; 
+        int boxWidth = 208; // 200
+        int boxHeight = 240;
+        int borderSize = 3;
 
-        GUI.Box(new Rect(xPos, yPos, 200, 150), "Casper's QOL Menu", guiStyleBox);
+        // Outer GUI Box for the border
+        // GUI.Box(new Rect(xPos - borderSize, yPos - borderSize, boxWidth + 2 * borderSize, boxHeight + 2 * borderSize), GUIContent.none, guiStyleBorder);
 
-        // Update the toggles using SharedState
-        /*
-        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
-        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
-        SharedState.protectToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.protectToggle, "Protection", SharedState.protectToggle ? guiStyleButtonSelected : guiStyleButton);
-        */
-        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
+
+        // Main GUI Box
+        //GUI.Box(new Rect(xPos, yPos, boxWidth, boxHeight), "Casper's QOL Menu", guiStyleBox);
+        //test
+        GUI.Box(new Rect(xPos, yPos, boxWidth, boxHeight), "Casper's QOL Menu", guiStyleBox);
+
+        // Concrete Speed Toggle
+        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 30, 180, 30), SharedState.speedToggle, "Concrete Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
             Debug.Log("Speed Toggle changed: " + SharedState.speedToggle);
@@ -116,5 +142,34 @@ public static class ShowGUI
         texture.SetPixel(0, 0, color);
         texture.Apply();
         return texture;
+    }
+
+    //test area
+    public static void LoadImages()
+    {
+        LoadImage("CasperQOL.Images.Background208x250.png", ref guiBoxNormal);
+
+    }
+    private static void LoadImage(string path, ref Texture2D output)
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        using (Stream stream = assembly.GetManifestResourceStream(path))
+        {
+            if (stream == null)
+            {
+                Debug.LogError($"Could not find image with path '{path}'");
+                return;
+            }
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                byte[] fileData = memoryStream.ToArray();
+
+                output = new Texture2D(2, 2);
+                output.LoadImage(fileData);
+            }
+        }
     }
 }
