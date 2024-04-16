@@ -8,10 +8,13 @@ public static class ShowGUI
     private static GUIStyle guiStyleBox;
     private static GUIStyle guiStyleButton;
     private static GUIStyle guiStyleButtonSelected;
+    public static GUIStyle guiStyleLabel;
+    private static GUIStyle guiStyleBorder;
 
     private static Texture2D lightestBackground;
     private static Texture2D lightBackground;
     private static Texture2D purpleBackground;
+    private static Texture2D orangeBorder;
 
     static ShowGUI()
     {
@@ -23,7 +26,12 @@ public static class ShowGUI
         // Create textures
         lightestBackground = CreateColorTexture("#3A3A58"); 
         lightBackground = CreateColorTexture("#303040");  
-        purpleBackground = CreateColorTexture("#800080"); 
+        purpleBackground = CreateColorTexture("#800080");
+        orangeBorder = CreateColorTexture("#FFA500");
+
+        guiStyleBorder = new GUIStyle(GUI.skin.box);
+        guiStyleBorder.normal.background = orangeBorder;
+        guiStyleBorder.border = new RectOffset(3, 3, 3, 3);
 
         // Box style
         guiStyleBox = new GUIStyle(GUI.skin.box);
@@ -63,35 +71,55 @@ public static class ShowGUI
         guiStyleButtonSelected.onActive.textColor = HexToColor("#FFA500");
         guiStyleButtonSelected.onFocused.background = purpleBackground;
         guiStyleButtonSelected.onFocused.textColor = HexToColor("#FFA500");
+
+        guiStyleLabel = new GUIStyle(GUI.skin.label);
+        guiStyleLabel.normal.textColor = HexToColor("#FFA500");
+        guiStyleLabel.fontSize = 16;
+        guiStyleLabel.alignment = TextAnchor.MiddleCenter;
     }
+
+
 
     public static void DrawGUI()
     {
         if (!shouldShow) return;
 
         float xPos = Screen.width / 2 - 100;
-        float yPos = Screen.height / 2 - 75;
+        float yPos = Screen.height / 2 - 90; 
+        int boxWidth = 200;
+        int boxHeight = 240;
+        int borderSize = 3;
 
-        GUI.Box(new Rect(xPos, yPos, 200, 150), "Casper's QOL Menu", guiStyleBox);
+        // Outer GUI Box for the border
+        GUI.Box(new Rect(xPos - borderSize, yPos - borderSize, boxWidth + 2 * borderSize, boxHeight + 2 * borderSize), GUIContent.none, guiStyleBorder);
 
-        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 40, 180, 30), SharedState.speedToggle, "Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
+
+        // Main GUI Box
+        GUI.Box(new Rect(xPos, yPos, boxWidth, boxHeight), "Casper's QOL Menu", guiStyleBox);
+
+        // Concrete Speed Toggle
+        SharedState.speedToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 30, 180, 30), SharedState.speedToggle, "Concrete Speed", SharedState.speedToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
-            Debug.Log("Speed Toggle changed: " + SharedState.speedToggle);
+            Debug.Log("Concrete Speed Toggle changed: " + SharedState.speedToggle);
         }
 
-        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 75, 180, 30), SharedState.lightToggle, "Headlight", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
+        // Headlight Toggle
+        SharedState.lightToggle = GUI.Toggle(new Rect(xPos + 10, yPos + 70, 180, 30), SharedState.lightToggle, "Headlight Toggle", SharedState.lightToggle ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
-            Debug.Log("Light Toggle changed: " + SharedState.lightToggle);
+            Debug.Log("Headlight Toggle changed: " + SharedState.lightToggle);
         }
 
-        SharedState.oreProtect = GUI.Toggle(new Rect(xPos + 10, yPos + 110, 180, 30), SharedState.oreProtect, "Protect Ore", SharedState.oreProtect ? guiStyleButtonSelected : guiStyleButton);
+        // Label for Cheats section
+        GUI.Label(new Rect(xPos, yPos + 115, boxWidth, 20), "Cheats:", guiStyleLabel);
+
+        // Infinite Ore Toggle
+        SharedState.oreProtect = GUI.Toggle(new Rect(xPos + 10, yPos + 140, 180, 30), SharedState.oreProtect, "Infinite Ore", SharedState.oreProtect ? guiStyleButtonSelected : guiStyleButton);
         if (GUI.changed)
         {
-            Debug.Log("Protection Toggle changed: " + SharedState.oreProtect);
+            Debug.Log("Infinite Ore Toggle changed: " + SharedState.oreProtect);
         }
-
     }
 
     private static Color HexToColor(string hex)

@@ -44,8 +44,6 @@ namespace CasperQOL
         private static readonly Harmony Harmony = new Harmony(MyGUID);
         public static ManualLogSource Log = new ManualLogSource(PluginName);
 
-
-
         private void Awake()
         {
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
@@ -65,12 +63,11 @@ namespace CasperQOL
             }
         }
 
+
         void OnGUI()
         {
             ShowGUI.DrawGUI();
         }
-
-
 
         private void ApplyPatches()
         {
