@@ -48,6 +48,9 @@ namespace CasperQOL
         private void Awake()
         {
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
+            //test
+            ShowGUI.LoadImages();
+
             Harmony.PatchAll();
             ApplyPatches();
 

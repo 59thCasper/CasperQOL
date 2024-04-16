@@ -30,7 +30,6 @@ namespace CasperQOL.Patches
                 AccessTools.FieldRefAccess<PlayerFirstPersonController, int>(controller, "standingOnLayer") = layer;
             }
 
-            // Direct calculation of legHeight based on bodyCollider and transform
             private static float CalculateLegHeight(PlayerFirstPersonController controller)
             {
                 CapsuleCollider collider = GetBodyCollider(controller);
@@ -39,27 +38,21 @@ namespace CasperQOL.Patches
 
             static void Prefix(PlayerFirstPersonController __instance)
             {
-                if (!__instance.m_IsGrounded) return;
-
                 CapsuleCollider bodyCollider = GetBodyCollider(__instance);
                 LayerMask groundLayer = GetGroundLayer(__instance);
-                float legHeight = CalculateLegHeight(__instance); 
+                float legHeight = CalculateLegHeight(__instance);
                 Vector3 position = __instance.transform.position;
-                float groundSnapping = 0.1f; 
+                float groundSnapping = 0.3f;  // Slightly increased sensitivity
+
+                // Calculate ray origin and casting distance
+                Vector3 rayOrigin = position + Vector3.up * (legHeight + 0.1f);  // Slightly above the feet
+                float castDistance = legHeight + groundSnapping;  // Casting distance includes ground snapping
 
                 // Perform SphereCast to detect ground
                 RaycastHit hit;
-                Vector3 rayOrigin = position + Vector3.up * legHeight;
-                if (Physics.SphereCast(rayOrigin, bodyCollider.radius, Vector3.down, out hit, legHeight + groundSnapping, groundLayer, QueryTriggerInteraction.Ignore))
+                if (Physics.SphereCast(rayOrigin, bodyCollider.radius, Vector3.down, out hit, castDistance, groundLayer, QueryTriggerInteraction.Ignore))
                 {
                     SetStandingOnLayer(__instance, hit.collider.gameObject.layer);
-                    Vector3 groundContactPoint = hit.point;
-                    float adjustHeight = legHeight - hit.distance;
-                    if (__instance.m_Rigidbody.velocity.y <= 0)
-                    {
-                        __instance.m_Rigidbody.transform.position += Vector3.up * adjustHeight;
-                    }
-
                     if (hit.collider.gameObject.CompareTag("IInteractable"))
                     {
                         var interactableComponent = hit.collider.GetComponent<IInteractable>();
@@ -68,6 +61,7 @@ namespace CasperQOL.Patches
                             var resId = interactableComponent.myMachineRef.ResId;
                             var displayName = SaveState.GetResInfoFromId(resId).displayName;
                             SharedState.stoodOn = displayName;
+                            Debug.Log($"Standing on interactable: {SharedState.stoodOn}");
                         }
                     }
                     else
@@ -77,14 +71,21 @@ namespace CasperQOL.Patches
                 }
                 else
                 {
-                    Debug.Log("No ground detected directly below via SphereCast.");
                     SharedState.stoodOn = "";
+                    Debug.Log("Not standing on any interactable object.");
                 }
 
-
-                if (__instance.m_IsGrounded && SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
+                // Update speed based on whether the player is grounded, on a valid resource, and the speed toggle is active
+                if (__instance.m_IsGrounded)
                 {
-                    UpdateSpeed(__instance, SharedState.CustomMaxRunSpeed, SharedState.CustomMaxWalkSpeed);
+                    if (SharedState.ValidResourceNames.Contains(SharedState.stoodOn) && SharedState.speedToggle)
+                    {
+                        UpdateSpeed(__instance, SharedState.CustomMaxRunSpeed, SharedState.CustomMaxWalkSpeed);
+                    }
+                    else
+                    {
+                        UpdateSpeed(__instance, SharedState.DefaultMaxRunSpeed, SharedState.DefaultMaxWalkSpeed);
+                    }
                 }
                 else
                 {
@@ -94,18 +95,15 @@ namespace CasperQOL.Patches
 
             private static void UpdateSpeed(PlayerFirstPersonController controller, float runSpeed, float walkSpeed)
             {
-                controller.maxRunSpeed = runSpeed;
-                controller.maxWalkSpeed = walkSpeed;
+                // Only update if there's a change to prevent unnecessary assignments
+                if (controller.maxRunSpeed != runSpeed || controller.maxWalkSpeed != walkSpeed)
+                {
+                    controller.maxRunSpeed = runSpeed;
+                    controller.maxWalkSpeed = walkSpeed;
+                    Debug.Log($"Updated Speeds -> Walk: {walkSpeed}, Run: {runSpeed}");
+                }
             }
+
         }
     }
 }
-
-
-
-
-
-
-
-
-

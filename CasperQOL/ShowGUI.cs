@@ -7,10 +7,6 @@ public static class ShowGUI
 {
     public static bool shouldShow = false;
 
-    private static GUIStyle guiStyleBox;
-    private static GUIStyle guiStyleButton;
-    private static GUIStyle guiStyleButtonSelected;
-
     private static Texture2D lightestBackground;
     private static Texture2D lightBackground;
     private static Texture2D purpleBackground;
@@ -19,82 +15,51 @@ public static class ShowGUI
 
     private static Texture2D guiBoxNormal;
 
-    static ShowGUI()
-    {
-        InitializeStyles();
-    }
-
-    private static void InitializeStyles()
-    {
-        // Create textures
-        lightestBackground = CreateColorTexture("#3A3A58"); 
-        lightBackground = CreateColorTexture("#303040");  
-        purpleBackground = CreateColorTexture("#800080"); 
-
-        /*
-        guiStyleBorder = new GUIStyle(GUI.skin.box);
-        guiStyleBorder.normal.background = orangeBorder;
-        guiStyleBorder.border = new RectOffset(3, 3, 3, 3);
-
-        // Box style
-        guiStyleBox = new GUIStyle(GUI.skin.box);
-        guiStyleBox.normal.background = lightestBackground;
-        guiStyleBox.normal.textColor = HexToColor("#FFA500"); 
-        guiStyleBox.fontSize = 16;
-        guiStyleBox.alignment = TextAnchor.UpperCenter;
-        */
-
-
-        // test
-        guiStyleBox = new GUIStyle();
-        guiStyleBox.fontSize = 16;
-        guiStyleBox.normal.textColor = Color.white;
-        guiStyleBox.alignment = TextAnchor.UpperCenter;
-        guiStyleBox.normal.background = guiBoxNormal;
-
-
-        // Button style for normal state
-        guiStyleButton = new GUIStyle(GUI.skin.button);
-        guiStyleButton.normal.background = lightBackground;
-        guiStyleButton.normal.textColor = HexToColor("#FFA500"); 
-        guiStyleButton.hover.background = lightBackground;
-        guiStyleButton.hover.textColor = HexToColor("#E59400");   
-        guiStyleButton.active.background = lightBackground;
-        guiStyleButton.active.textColor = HexToColor("#E59400");
-        guiStyleButton.focused.background = lightBackground;
-        guiStyleButton.focused.textColor = HexToColor("#FFA500");
-        guiStyleButton.fontSize = 14;
-        guiStyleButton.alignment = TextAnchor.MiddleCenter;
-
-        // Button style for selected state
-        guiStyleButtonSelected = new GUIStyle(guiStyleButton);
-        guiStyleButtonSelected.normal.background = purpleBackground;
-        guiStyleButtonSelected.normal.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.hover.background = purpleBackground;
-        guiStyleButtonSelected.hover.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.active.background = purpleBackground;
-        guiStyleButtonSelected.active.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.focused.background = purpleBackground;
-        guiStyleButtonSelected.focused.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.onNormal.background = purpleBackground;
-        guiStyleButtonSelected.onNormal.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.onHover.background = purpleBackground;
-        guiStyleButtonSelected.onHover.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.onActive.background = purpleBackground;
-        guiStyleButtonSelected.onActive.textColor = HexToColor("#FFA500");
-        guiStyleButtonSelected.onFocused.background = purpleBackground;
-        guiStyleButtonSelected.onFocused.textColor = HexToColor("#FFA500");
-    }
-
     public static void DrawGUI()
     {
         if (!shouldShow) return;
 
+        lightestBackground = CreateColorTexture("#3A3A58");
+        lightBackground = CreateColorTexture("#303040");
+        purpleBackground = CreateColorTexture("#800080");
+
         float xPos = Screen.width / 2 - 100;
-        float yPos = Screen.height / 2 - 90; 
+        float yPos = Screen.height / 2 - 90;
         int boxWidth = 208; // 200
         int boxHeight = 240;
-        int borderSize = 3;
+
+        GUIStyle guiStyleBox = new GUIStyle()
+        {
+            fontSize = 16,
+            normal = { textColor = Color.white, background = guiBoxNormal },
+            alignment = TextAnchor.UpperCenter,
+            padding = new RectOffset(0, 0, 10, 0) // Adjust the top padding here (10 in this example)
+        };
+
+        // Button style for normal state
+        GUIStyle guiStyleButton = new GUIStyle()
+        {
+            normal = { background = lightBackground, textColor = HexToColor("#FFA500") },
+            hover = { background = lightBackground, textColor = HexToColor("#E59400") },
+            active = { background = lightBackground, textColor = HexToColor("#E59400") },
+            focused = { background = lightBackground, textColor = HexToColor("#FFA500") },
+            fontSize = 14,
+            alignment = TextAnchor.MiddleCenter
+        };
+
+        // Button style for selected state
+        GUIStyle guiStyleButtonSelected = new GUIStyle()
+        {
+            normal = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            hover = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            active = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            focused = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            onNormal = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            onHover = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            onActive = { background = purpleBackground, textColor = HexToColor("#FFA500") },
+            onFocused = { background = purpleBackground, textColor = HexToColor("#FFA500") }
+        };
+
 
         // Outer GUI Box for the border
         // GUI.Box(new Rect(xPos - borderSize, yPos - borderSize, boxWidth + 2 * borderSize, boxHeight + 2 * borderSize), GUIContent.none, guiStyleBorder);
