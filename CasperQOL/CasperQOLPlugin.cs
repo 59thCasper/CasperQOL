@@ -78,6 +78,7 @@ namespace CasperQOL
             Harmony.CreateAndPatchAll(typeof(PlayerFirstPersonControllerPatch));
             Harmony.CreateAndPatchAll(typeof(HeadlampUpdatePatch));
             Harmony.CreateAndPatchAll(typeof(VoxelModificationPatch));
+            Harmony.CreateAndPatchAll(typeof(PreBuiltMachinePatch));
         }
         private void CreateConfigEntries()
         {

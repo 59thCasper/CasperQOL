@@ -61,7 +61,6 @@ namespace CasperQOL.Patches
                             var resId = interactableComponent.myMachineRef.ResId;
                             var displayName = SaveState.GetResInfoFromId(resId).displayName;
                             SharedState.stoodOn = displayName;
-                            Debug.Log($"Standing on interactable: {SharedState.stoodOn}");
                         }
                     }
                     else
@@ -72,7 +71,6 @@ namespace CasperQOL.Patches
                 else
                 {
                     SharedState.stoodOn = "";
-                    Debug.Log("Not standing on any interactable object.");
                 }
 
                 // Update speed based on whether the player is grounded, on a valid resource, and the speed toggle is active
