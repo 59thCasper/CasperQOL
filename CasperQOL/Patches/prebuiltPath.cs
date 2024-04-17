@@ -19,7 +19,7 @@ namespace CasperQOL.Patches
             Debug.Log(machineType);
 
             // Check if the machine type is either ProductionTerminal or TransitDepot
-            if (machineType != MachineTypeEnum.ProductionTerminal && machineType != MachineTypeEnum.TransitDepot)
+            if (machineType != MachineTypeEnum.ProductionTerminal && machineType != MachineTypeEnum.TransitDepot && machineType != MachineTypeEnum.Chest && machineType != MachineTypeEnum.RepairableElevator && machineType != MachineTypeEnum.Beacon)
             {
 
                 Debug.LogError($"Attempt to build unsupported machine type {machineType} at {__instance.pos}. Only ProductionTerminal and TransitDepot are allowed.");
